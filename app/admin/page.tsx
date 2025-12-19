@@ -4,7 +4,7 @@ import AddItemForm from '@/components/AddItemForm'
 import ItemList from '@/components/ItemList'
 
 export default async function AdminPage() {
-    const supabase = await createClient()
+    const supabase = createClient()
 
     // 認証チェック
     const {

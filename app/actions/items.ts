@@ -9,7 +9,7 @@ import { revalidatePath } from 'next/cache'
  */
 export async function addItem(streamerId: string, url: string) {
     try {
-        const supabase = await createClient()
+        const supabase = createClient()
 
         // 認証チェック
         const {
@@ -54,7 +54,7 @@ export async function addItem(streamerId: string, url: string) {
  */
 export async function deleteItem(itemId: string) {
     try {
-        const supabase = await createClient()
+        const supabase = createClient()
 
         // 認証チェック
         const {

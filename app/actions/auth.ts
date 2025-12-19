@@ -7,7 +7,7 @@ import { redirect } from 'next/navigation'
  * メールアドレスとパスワードでログイン
  */
 export async function signInWithEmail(email: string, password: string) {
-    const supabase = await createClient()
+    const supabase = createClient()
 
     const { error } = await supabase.auth.signInWithPassword({
         email,
@@ -25,7 +25,7 @@ export async function signInWithEmail(email: string, password: string) {
  * Googleでログイン
  */
 export async function signInWithGoogle() {
-    const supabase = await createClient()
+    const supabase = createClient()
 
     const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
@@ -47,7 +47,7 @@ export async function signInWithGoogle() {
  * ログアウト
  */
 export async function signOut() {
-    const supabase = await createClient()
+    const supabase = createClient()
     await supabase.auth.signOut()
     redirect('/login')
 }
