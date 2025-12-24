@@ -11,7 +11,7 @@ export const revalidate = 60
 
 export default async function PublicPage({ params }: PageProps) {
     const { username } = await params
-    const supabase = createClient()
+    const supabase = await createClient()
 
     // ユーザー名からプロフィールを取得
     const { data: profile } = await supabase

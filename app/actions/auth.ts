@@ -7,7 +7,7 @@ import { redirect } from 'next/navigation'
  * メールアドレスとパスワードでログイン
  */
 export async function signInWithEmail(email: string, password: string) {
-    const supabase = createClient()
+    const supabase = await createClient()
 
     const { error } = await supabase.auth.signInWithPassword({
         email,
@@ -22,10 +22,33 @@ export async function signInWithEmail(email: string, password: string) {
 }
 
 /**
+ * メールアドレスとパスワードで新規登録
+ */
+export async function signUpWithEmail(email: string, password: string) {
+    const supabase = await createClient()
+
+    const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+            // 環境変数の設定ミスを防ぐため、一時的にローカルURLを直接指定します
+            emailRedirectTo: 'http://localhost:3000/auth/callback',
+        },
+    })
+
+    if (error) {
+        return { error: '登録に失敗しました: ' + error.message }
+    }
+
+    // メール確認が必要な設定の場合もあるが、今回は成功メッセージを返す
+    return { success: true }
+}
+
+/**
  * Googleでログイン
  */
 export async function signInWithGoogle() {
-    const supabase = createClient()
+    const supabase = await createClient()
 
     const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
@@ -47,7 +70,7 @@ export async function signInWithGoogle() {
  * ログアウト
  */
 export async function signOut() {
-    const supabase = createClient()
+    const supabase = await createClient()
     await supabase.auth.signOut()
     redirect('/login')
 }

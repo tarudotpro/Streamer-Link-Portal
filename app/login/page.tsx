@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation'
 import LoginForm from '@/components/LoginForm'
 
 export default async function LoginPage() {
-    const supabase = createClient()
+    const supabase = await createClient()
 
     // すでにログイン済みの場合は管理画面へリダイレクト
     const {

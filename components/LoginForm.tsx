@@ -2,25 +2,37 @@
 
 import { useState } from 'react'
 import { LogIn, Loader2 } from 'lucide-react'
-import { signInWithEmail, signInWithGoogle } from '@/app/actions/auth'
+import { signInWithEmail, signInWithGoogle, signUpWithEmail } from '@/app/actions/auth'
 
 export default function LoginForm() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
+    const [success, setSuccess] = useState<string | null>(null)
+    const [isSignUp, setIsSignUp] = useState(false)
 
-    const handleEmailLogin = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         setLoading(true)
         setError(null)
+        setSuccess(null)
 
-        const result = await signInWithEmail(email, password)
-        if (result.error) {
-            setError(result.error)
-            setLoading(false)
+        if (isSignUp) {
+            const result = await signUpWithEmail(email, password)
+            if (result.error) {
+                setError(result.error)
+            } else if (result.success) {
+                setSuccess('確認メールを送信しました。メールボックスを確認して登録を完了してください。')
+                setIsSignUp(false)
+            }
+        } else {
+            const result = await signInWithEmail(email, password)
+            if (result?.error) {
+                setError(result.error)
+            }
         }
-        // 成功時はリダイレクトされる
+        setLoading(false)
     }
 
     const handleGoogleLogin = async () => {
@@ -31,7 +43,7 @@ export default function LoginForm() {
 
     return (
         <div className="space-y-4">
-            <form onSubmit={handleEmailLogin} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                     <label htmlFor="email" className="block text-sm font-medium text-white mb-2">
                         メールアドレス
@@ -56,6 +68,7 @@ export default function LoginForm() {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
+                        minLength={6}
                         className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-purple-500"
                     />
                 </div>
@@ -63,6 +76,12 @@ export default function LoginForm() {
                 {error && (
                     <div className="p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-200 text-sm">
                         {error}
+                    </div>
+                )}
+
+                {success && (
+                    <div className="p-3 bg-green-500/20 border border-green-500/50 rounded-lg text-green-200 text-sm">
+                        {success}
                     </div>
                 )}
 
@@ -74,16 +93,30 @@ export default function LoginForm() {
                     {loading ? (
                         <>
                             <Loader2 className="w-5 h-5 animate-spin" />
-                            ログイン中...
+                            処理中...
                         </>
                     ) : (
                         <>
                             <LogIn className="w-5 h-5" />
-                            ログイン
+                            {isSignUp ? '登録する' : 'ログイン'}
                         </>
                     )}
                 </button>
             </form>
+
+            <div className="text-center">
+                <button
+                    type="button"
+                    onClick={() => {
+                        setIsSignUp(!isSignUp)
+                        setError(null)
+                        setSuccess(null)
+                    }}
+                    className="text-sm text-purple-300 hover:text-purple-200 underline"
+                >
+                    {isSignUp ? 'すでにアカウントをお持ちの方はこちら' : 'アカウントをお持ちでない方はこちら（新規登録）'}
+                </button>
+            </div>
 
             <div className="relative">
                 <div className="absolute inset-0 flex items-center">
