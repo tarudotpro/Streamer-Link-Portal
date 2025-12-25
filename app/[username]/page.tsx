@@ -1,6 +1,7 @@
 import { createClient } from '@/utils/supabase/server'
 import { notFound } from 'next/navigation'
 import PublicItemCard from '@/components/PublicItemCard'
+import ChannelHeader from '@/components/ChannelHeader'
 
 interface PageProps {
     params: Promise<{ username: string }>
@@ -49,13 +50,8 @@ export default async function PublicPage({ params }: PageProps) {
             }}
         >
             <div className="container mx-auto px-4 py-12">
-                {/* ヘッダー */}
-                <header className="text-center mb-12">
-                    <h1 className="text-5xl font-bold text-white mb-4">
-                        {profile.display_name}
-                    </h1>
-                    <p className="text-white/80">配信スケジュール & アーカイブ</p>
-                </header>
+                {/* YouTube チャンネルヘッダー */}
+                <ChannelHeader profile={profile} />
 
                 {/* LIVE */}
                 {live.length > 0 && (

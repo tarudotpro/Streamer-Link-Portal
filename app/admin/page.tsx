@@ -2,6 +2,7 @@ import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 import AddItemForm from '@/components/AddItemForm'
 import ItemList from '@/components/ItemList'
+import ProfileSettings from '@/components/ProfileSettings'
 
 export default async function AdminPage() {
     const supabase = await createClient()
@@ -41,11 +42,19 @@ export default async function AdminPage() {
                     </p>
                 </header>
 
-                <div className="grid gap-8 lg:grid-cols-2">
-                    {/* 左側: アイテム追加フォーム */}
+                <div className="grid gap-8 lg:grid-cols-3">
+                    {/* 左側: プロフィール設定 */}
                     <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
                         <h2 className="text-2xl font-bold text-white mb-4">
-                            新しいアイテムを追加
+                            プロフィール設定
+                        </h2>
+                        <ProfileSettings profile={profile} />
+                    </div>
+
+                    {/* 中央: アイテム追加フォーム */}
+                    <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
+                        <h2 className="text-2xl font-bold text-white mb-4">
+                            アイテム追加
                         </h2>
                         <AddItemForm streamerId={user.id} />
                     </div>
